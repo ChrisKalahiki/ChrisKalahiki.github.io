@@ -17,6 +17,11 @@ A bot made for my personal Discord server, but made it open-source for everyone 
 - **Technologies**: Python, Discord API
 - **GitHub**: [Link to Repository](https://github.com/ChrisKalahiki/ruger-bot)
 
+## Image Clustering with Discrete Wavelet Transform on CT Scans
+Performed Image clustering on CT scans while exercising texture analysis and feature extraction through the use of Discrete Wavelet Transform.
+- **Technologies**: Python, Scikit-Learn
+- **GitHub**: [Link to Repository](https://github.com/ChrisKalahiki/CT-Image-Analysis-using-DWT)
+
 ## Street Sign Classification
 One of my first machine learning models was a CNN model for identifying street signs.
 - **Technologies**: Python, TensorFlow, Computer Vision
