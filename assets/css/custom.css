@@ -1,0 +1,9 @@
+/* Custom styles for Chris Kalahiki's website */
+
+/* Control the logo size */
+header img {
+  max-width: 200px; /* Adjust this value to make the logo smaller or larger */
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
+}
