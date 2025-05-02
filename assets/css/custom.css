@@ -1,5 +1,18 @@
 /* Custom styles for Chris Kalahiki's website */
 
+/* Header layout */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header-container h1 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
 /* Control the logo size */
 header img {
   max-width: 200px; /* Adjust this value to make the logo smaller or larger */
@@ -11,17 +24,16 @@ header img {
 
 /* Hamburger Menu Styling */
 .hamburger-menu {
-  margin: 20px 0;
   position: relative;
 }
 
 .hamburger-icon {
   display: block;
   cursor: pointer;
-  width: 35px;
-  height: 25px;
+  width: 30px;
+  height: 22px;
   position: relative;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .hamburger-icon span {
@@ -42,15 +54,15 @@ header img {
 }
 
 .hamburger-icon span:nth-child(2) {
-  top: 10px;
+  top: 9px;
 }
 
 .hamburger-icon span:nth-child(3) {
-  top: 20px;
+  top: 18px;
 }
 
 .hamburger-icon.active span:nth-child(1) {
-  top: 10px;
+  top: 9px;
   transform: rotate(135deg);
 }
 
@@ -60,7 +72,7 @@ header img {
 }
 
 .hamburger-icon.active span:nth-child(3) {
-  top: 10px;
+  top: 9px;
   transform: rotate(-135deg);
 }
 
@@ -69,6 +81,8 @@ nav#nav-menu {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-out;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 nav#nav-menu.active {
