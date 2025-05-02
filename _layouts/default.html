@@ -21,15 +21,22 @@
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
 
-        <nav>
-          <ul>
-            <li><a href="{{ site.baseurl }}/">Home</a></li>
-            <li><a href="{{ site.baseurl }}/pages/education/">Education</a></li>
-            <li><a href="{{ site.baseurl }}/pages/publications/">Publications</a></li>
-            <li><a href="{{ site.baseurl }}/pages/work-experience/">Work Experience</a></li>
-            <li><a href="{{ site.baseurl }}/pages/projects/">Projects</a></li>
-          </ul>
-        </nav>
+        <div class="hamburger-menu">
+          <div class="hamburger-icon" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <nav id="nav-menu">
+            <ul>
+              <li><a href="{{ site.baseurl }}/">Home</a></li>
+              <li><a href="{{ site.baseurl }}/pages/education/">Education</a></li>
+              <li><a href="{{ site.baseurl }}/pages/publications/">Publications</a></li>
+              <li><a href="{{ site.baseurl }}/pages/work-experience/">Work Experience</a></li>
+              <li><a href="{{ site.baseurl }}/pages/projects/">Projects</a></li>
+            </ul>
+          </nav>
+        </div>
       </header>
       <section>
 
@@ -41,5 +48,11 @@
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
+    <script>
+      function toggleMenu() {
+        document.getElementById('nav-menu').classList.toggle('active');
+        document.querySelector('.hamburger-icon').classList.toggle('active');
+      }
+    </script>
   </body>
 </html>
