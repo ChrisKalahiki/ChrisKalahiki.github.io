@@ -6,44 +6,34 @@ permalink: /pages/education/
 
 # Education
 
-## Doctorate of Philosophy in Computer Science
-* **Clemson University**
-* 2020 - Present
+## Ph.D. in Computer Science
+**Clemson University** - Present
+- Research focus in Machine Learning and High Performance Computing
+- Working on applications of ML to various domains including computer vision, explainable AI, and generative models
 
-### Notable Coursework
-* Course 1
-* Course 2
-* Course 3
+## M.S. in Computer Science
+**Louisiana Tech University** - 2020
+- Thesis: "Computer Vision for Inventory Management Systems"
+- Dissertation published in ProQuest Dissertations Publishing, 2020. 29257581
 
-### Projects
-* **Project Name**: Brief description of project completed during this degree
-* **Project Name**: Brief description of another project
+## B.S. in Computer Science
+**Louisiana Tech University** - 2018
+- Concentrations in Big Data & Cloud Computing and Cyber Security
+- Focus on foundational computer science principles and early work in machine learning
 
-## Master of Science in Computer Science
-* **Louisiana Tech University**
-* 2018 - 2020
+## Skills
 
-### Notable Coursework
-* Course 1
-* Course 2
-* Course 3
+- **Programming Languages**: Python, C++, Java, JavaScript
+- **Machine Learning**: TensorFlow, PyTorch, Scikit-learn
+- **High Performance Computing**: CUDA, MPI, OpenMP
+- **Other Technologies**: Git, Docker, AWS, Linux
 
-### Projects
-* **Project Name**: Brief description of project completed during this degree
-* **Project Name**: Brief description of another project
+## Relevant Coursework
 
-## Bachelor of Science in Computer Science
-* **Louisiana Tech University**
-* Concentrations in Big Data & Cloud Computing and Cyber Security
-* 2014 - 2018
-
-### Notable Coursework
-* Course 1
-* Course 2
-* Course 3
-
-### Projects
-* **Project Name**: Brief description of project completed during this degree
-* **Project Name**: Brief description of another project
-
-[Back to Home]({{ site.baseurl }}/)
+- Advanced Algorithms
+- Machine Learning
+- Deep Learning
+- Natural Language Processing
+- Computer Vision
+- High Performance Computing
+- Distributed Systems

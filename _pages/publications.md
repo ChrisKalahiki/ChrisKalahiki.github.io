@@ -6,48 +6,20 @@ permalink: /pages/publications/
 
 # Publications
 
+All of my publications can be found on [Google Scholar](https://scholar.google.com/) and [ORCiD](https://orcid.org/).
+
 ## Journal Articles
 
-### Article Title 1
-* **Authors**: [Author list including your name]
-* **Journal**: [Journal Name]
-* **Year**: [Publication Year]
-* **DOI/Link**: [DOI or URL]
-* **Abstract**: [Brief abstract of the publication]
-* **Keywords**: [Keywords associated with the publication]
+- A. Stone, C. Kalahiki, L. Li, N. Hubig, F. Iuricich, H. Dunn, "**Evaluation of breast tumor morphologies from African American and Caucasian patients**", Computational and Structural Biotechnology Journal, Volume 21, 2023, Pages 3459-3465, doi: [https://doi.org/10.1016/j.csbj.2023.06.019](https://doi.org/10.1016/j.csbj.2023.06.019).
 
-### Article Title 2
-* **Authors**: [Author list including your name]
-* **Journal**: [Journal Name]
-* **Year**: [Publication Year]
-* **DOI/Link**: [DOI or URL]
-* **Abstract**: [Brief abstract of the publication]
-* **Keywords**: [Keywords associated with the publication]
+## Theses and Dissertations
 
-## Conference Papers
+- C. Kalahiki, "**Computer Vision for Inventory Management Systems**", Louisiana Tech University ProQuest Dissertations Publishing, 2020. 29257581.
 
-### Conference Paper Title 1
-* **Authors**: [Author list including your name]
-* **Conference**: [Conference Name]
-* **Location**: [Conference Location]
-* **Year**: [Publication Year]
-* **DOI/Link**: [DOI or URL]
-* **Abstract**: [Brief abstract of the paper]
+## Conference Proceedings
 
-### Conference Paper Title 2
-* **Authors**: [Author list including your name]
-* **Conference**: [Conference Name]
-* **Location**: [Conference Location]
-* **Year**: [Publication Year]
-* **DOI/Link**: [DOI or URL]
-* **Abstract**: [Brief abstract of the paper]
+*Will be updated with conference publications.*
 
-## Posters and Presentations
+## Preprints and Working Papers
 
-### Presentation Title 1
-* **Event**: [Event Name]
-* **Location**: [Event Location]
-* **Date**: [Presentation Date]
-* **Description**: [Brief description of the presentation]
-
-[Back to Home]({{ site.baseurl }}/)
+*Will be updated with upcoming papers.*

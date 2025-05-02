@@ -4,63 +4,38 @@ title: Projects
 permalink: /pages/projects/
 ---
 
-# Portfolio Projects
+# Projects
 
-## Project 1
-* **Name**: [Project Name]
-* **Timeline**: [Month/Year - Month/Year]
-* **Description**: Detailed description of the project, including its purpose, scope, and significance.
-* **Technologies Used**: 
-  * Technology 1
-  * Technology 2
-  * Technology 3
-* **Repository**: [GitHub Repository Link]
-* **Live Demo**: [Live Demo Link if available]
+Here are some of the projects I've worked on:
 
-### Key Features
-* Feature 1 with description
-* Feature 2 with description
-* Feature 3 with description
+## Ruger Bot
+A bot made for my personal Discord server, but made it open-source for everyone to try.
+- **Technologies**: Python, Discord API
+- **GitHub**: [Link to Repository]
 
-### Images
-[Screenshots or images of the project can be added here]
+## Street Sign Classification
+One of my first machine learning models was a CNN model for identifying street signs.
+- **Technologies**: Python, TensorFlow, Computer Vision
+- **Description**: Developed a convolutional neural network to classify different types of street signs for potential autonomous vehicle applications.
 
-## Project 2
-* **Name**: [Project Name]
-* **Timeline**: [Month/Year - Month/Year]
-* **Description**: Detailed description of the project, including its purpose, scope, and significance.
-* **Technologies Used**: 
-  * Technology 1
-  * Technology 2
-  * Technology 3
-* **Repository**: [GitHub Repository Link]
-* **Live Demo**: [Live Demo Link if available]
+## Machine Learning Research Projects
 
-### Key Features
-* Feature 1 with description
-* Feature 2 with description
-* Feature 3 with description
+### Computer Vision for Inventory Management Systems
+- My master's thesis work developing computer vision solutions for inventory tracking.
+- **Technologies**: Python, OpenCV, Deep Learning
 
-### Images
-[Screenshots or images of the project can be added here]
+### Explainable Machine Learning Models
+- Research on making black-box machine learning models more interpretable.
+- **Technologies**: Python, TensorFlow, Scikit-learn
 
-## Project 3
-* **Name**: [Project Name]
-* **Timeline**: [Month/Year - Month/Year]
-* **Description**: Detailed description of the project, including its purpose, scope, and significance.
-* **Technologies Used**: 
-  * Technology 1
-  * Technology 2
-  * Technology 3
-* **Repository**: [GitHub Repository Link]
-* **Live Demo**: [Live Demo Link if available]
+### AI for Games
+- Developed intelligent agents for game environments.
+- **Technologies**: Reinforcement Learning, Python
 
-### Key Features
-* Feature 1 with description
-* Feature 2 with description
-* Feature 3 with description
+### Generative Models
+- Projects exploring generative models for art and music creation.
+- **Technologies**: GANs, VAEs, PyTorch
 
-### Images
-[Screenshots or images of the project can be added here]
+## More Projects Coming Soon
 
-[Back to Home]({{ site.baseurl }}/)
+I'm constantly working on new projects. Check back for updates or visit my [GitHub profile](https://github.com/ChrisKalahiki) for the latest work.

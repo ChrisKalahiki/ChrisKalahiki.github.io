@@ -1,37 +1,33 @@
-## Welcome to GitHub Pages
+# Chris Kalahiki's Personal Website
 
-You can use the [editor on GitHub](https://github.com/ChrisKalahiki/ChrisKalahiki.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+This is the repository for my personal website, showcasing my academic background, research, publications, and projects. The site is built using GitHub Pages and Jekyll.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## About Me
 
-### Markdown
+I'm pursuing my Ph.D. in Computer Science at Clemson University with a research focus in Machine Learning and High Performance Computing. Machine Learning has been a passion of mine since the early days of my undergraduate work.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Website Content
 
-```markdown
-Syntax highlighted code block
+- **Home**: Introduction and latest highlights
+- **Education**: Academic background and skills
+- **Publications**: Journal articles and research publications
+- **Work Experience**: Professional background and technical skills
+- **Projects**: Showcase of various projects including ML research
 
-# Header 1
-## Header 2
-### Header 3
+## Technical Information
 
-- Bulleted
-- List
+This website is built with:
+- [GitHub Pages](https://pages.github.com/)
+- [Jekyll](https://jekyllrb.com/)
+- Customized Midnight theme
 
-1. Numbered
-2. List
+## Connect With Me
 
-**Bold** and _Italic_ and `Code` text
+- [GitHub](https://github.com/ChrisKalahiki)
+- [LinkedIn](https://linkedin.com/in/chriskalahiki)
+- [Google Scholar](https://scholar.google.com/)
+- [ORCiD](https://orcid.org/)
 
-[Link](url) and ![Image](src)
-```
+## License
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ChrisKalahiki/ChrisKalahiki.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+The content of this website is licensed under [MIT License](LICENSE) unless otherwise noted.

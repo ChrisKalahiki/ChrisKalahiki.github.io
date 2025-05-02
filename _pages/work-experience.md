@@ -6,46 +6,42 @@ permalink: /pages/work-experience/
 
 # Work Experience
 
-## Position Title 1
-* **Company/Organization**: [Company Name]
-* **Location**: [City, State/Country]
-* **Duration**: [Start Date] - [End Date or "Present"]
+## Research Assistant
+**Clemson University, School of Computing** - Present
+- Conducting research in Machine Learning and High Performance Computing
+- Collaborating on interdisciplinary research projects 
+- Contributing to academic publications
 
-### Responsibilities
-* Responsibility 1 with specific details
-* Responsibility 2 with specific details
-* Responsibility 3 with specific details
+## Previous Experience
 
-### Key Achievements
-* Specific achievement with measurable results
-* Another achievement with measurable results
+## Teaching Assistant
+**Clemson University** - Present
+- Assisting professors with course instruction and lab sessions
+- Grading assignments and providing feedback to students
+- Conducting office hours to support student learning
 
-## Position Title 2
-* **Company/Organization**: [Company Name]
-* **Location**: [City, State/Country]
-* **Duration**: [Start Date] - [End Date]
+### Graduate Research Assistant
+**Louisiana Tech University** - 2018-2020
+- Worked on Computer Vision for Inventory Management Systems
+- Developed machine learning models for object detection and classification
+- Completed Master's thesis on computer vision applications
 
-### Responsibilities
-* Responsibility 1 with specific details
-* Responsibility 2 with specific details
-* Responsibility 3 with specific details
+### Internships and Industry Experience
 
-### Key Achievements
-* Specific achievement with measurable results
-* Another achievement with measurable results
+### Associate Consultant
+**Fenway Group** - 2018-2019
+- Worked to create an e-commerce website using Wordpress and PHP
+- Deployed and maintained an application using Kubernetes and Docker for containerization of applications in Amazon Web Services
+- Gained hands-on experience working with various parts of a CI/CD pipeline
 
-## Position Title 3
-* **Company/Organization**: [Company Name]
-* **Location**: [City, State/Country]
-* **Duration**: [Start Date] - [End Date]
+### IT Intern
+**Oaklawn Racing & Gaming** - 2017-2017
+- Worked to create applications to allow better intefacing with SQL databases for staff
+- Gained hands-on experience working with SQL, .NET, and virtual machines
 
-### Responsibilities
-* Responsibility 1 with specific details
-* Responsibility 2 with specific details
-* Responsibility 3 with specific details
+## Technical Skills
 
-### Key Achievements
-* Specific achievement with measurable results
-* Another achievement with measurable results
-
-[Back to Home]({{ site.baseurl }}/)
+- **Machine Learning & AI**: Deep Learning, Computer Vision, NLP, Reinforcement Learning, Generative Models
+- **Software Development**: Full-stack development, API design, version control
+- **Data Analysis**: Statistical analysis, data visualization, feature engineering
+- **Cloud Computing**: Experience with AWS, Google Cloud, and other cloud platforms
