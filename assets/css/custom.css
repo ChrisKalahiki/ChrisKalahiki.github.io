@@ -116,13 +116,13 @@ nav ul li a:hover {
 
 /* Content styling */
 h1, h2, h3, h4, h5, h6 {
-  color: #0366d6;
+  /* color: #0366d6; */
   margin-top: 24px;
   margin-bottom: 16px;
 }
 
 a {
-  color: #0366d6;
+  /* color: #0366d6; */
   text-decoration: none;
 }
 
