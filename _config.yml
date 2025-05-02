@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+remote_theme: pages-themes/midnight@v0.2.0
 title: Chris Kalahiki
 description: Personal website showcasing education, publications, work history, and projects
 logo: /assets/img/profile.jpg
@@ -6,3 +6,4 @@ show_downloads: false
 google_analytics: 
 plugins:
   - jekyll-seo-tag
+  - Jekyll-remote-theme
