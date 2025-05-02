@@ -8,15 +8,20 @@ permalink: /pages/projects/
 
 Here are some of the projects I've worked on:
 
+## Recommending IDEs to Developers using Sentiment Analysis and Stack Overflow Tags
+Created a complete pipeline for recommending interactive development environments based on sentiment analysis on Stack Overflow posts leveraging the tagging system to analyze relationships between users and posts.
+- **Technologies**: Python, Jupyter Notebooks
+
 ## Ruger Bot
 A bot made for my personal Discord server, but made it open-source for everyone to try.
 - **Technologies**: Python, Discord API
-- **GitHub**: [Link to Repository]
+- **GitHub**: [Link to Repository](https://github.com/ChrisKalahiki/ruger-bot)
 
 ## Street Sign Classification
 One of my first machine learning models was a CNN model for identifying street signs.
 - **Technologies**: Python, TensorFlow, Computer Vision
 - **Description**: Developed a convolutional neural network to classify different types of street signs for potential autonomous vehicle applications.
+- **GitHub**: [Link to Repository](https://github.com/ChrisKalahiki/CNN-for-BelgiumTS-and-MNIST)
 
 ## Machine Learning Research Projects
 
