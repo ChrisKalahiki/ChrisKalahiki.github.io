@@ -16,10 +16,10 @@ All of my publications can be found on [Google Scholar](https://scholar.google.c
 
 - C. Kalahiki, "**Computer Vision for Inventory Management Systems**", Louisiana Tech University ProQuest Dissertations Publishing, 2020. 29257581.
 
-## Conference Proceedings
+<!-- ## Conference Proceedings
 
-*Will be updated with conference publications.*
+*Will be updated with conference publications.* -->
 
-## Preprints and Working Papers
+<!-- ## Preprints and Working Papers
 
-*Will be updated with upcoming papers.*
+*Will be updated with upcoming papers.* -->
