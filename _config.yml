@@ -6,4 +6,17 @@ show_downloads: false
 google_analytics: 
 plugins:
   - jekyll-seo-tag
-  - Jekyll-remote-theme
+  - jekyll-remote-theme
+
+# Jekyll settings
+baseurl: ""
+url: "https://chriskalahiki.github.io"
+permalink: pretty
+include: 
+  - _pages
+
+# Navigation structure
+collections:
+  pages:
+    output: true
+    permalink: /:collection/:name/

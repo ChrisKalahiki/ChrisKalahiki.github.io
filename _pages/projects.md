@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Portfolio Projects
-permalink: /projects/
+title: Projects
+permalink: /pages/projects/
 ---
 
 # Portfolio Projects
