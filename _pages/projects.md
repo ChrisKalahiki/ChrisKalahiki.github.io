@@ -38,13 +38,13 @@ One of my first machine learning models was a CNN model for identifying street s
 - Research on making black-box machine learning models more interpretable.
 - **Technologies**: Python, TensorFlow, Scikit-learn
 
-### AI for Games
+<!-- ### AI for Games
 - Developed intelligent agents for game environments.
 - **Technologies**: Reinforcement Learning, Python
 
 ### Generative Models
 - Projects exploring generative models for art and music creation.
-- **Technologies**: GANs, VAEs, PyTorch
+- **Technologies**: GANs, VAEs, PyTorch -->
 
 ## More Projects Coming Soon
 
