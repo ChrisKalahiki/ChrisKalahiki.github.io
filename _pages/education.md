@@ -30,10 +30,26 @@ permalink: /pages/education/
 
 ## Relevant Coursework
 
-- Advanced Algorithms
-- Machine Learning
+### Machine Learning & Data Mining
+
 - Deep Learning
-- Natural Language Processing
-- Computer Vision
-- High Performance Computing
-- Distributed Systems
+- Advanced Machine Learning
+- Information Theory and Machine Learning
+- Adaptive Decision Support Systems
+- Machine Learning Model Explainability
+
+### Algorithms
+
+- Design & Analysis of Algorithms
+- Advanced Analysis of Algorithms & Complexities
+
+### Parallel Computing
+
+- Applications of Parallel Computing
+- Parallel Architecture
+- Distributed & Cloud Computing
+
+### Other
+
+- Security in Emerging Systems
+- Quantum Computing
