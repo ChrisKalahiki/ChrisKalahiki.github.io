@@ -15,24 +15,25 @@
       <header>
         <div class="header-container">
           <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
-          <div class="hamburger-menu">
-            <div class="hamburger-icon" onclick="toggleMenu()">
-              <span></span>
-              <span></span>
-              <span></span>
+          <div class="header-right">
+            <nav id="nav-menu">
+              <ul>
+                <li><a href="{{ site.baseurl }}/">Home</a></li>
+                <li><a href="{{ site.baseurl }}/pages/education/">Education</a></li>
+                <li><a href="{{ site.baseurl }}/pages/publications/">Publications</a></li>
+                <li><a href="{{ site.baseurl }}/pages/work-experience/">Work Experience</a></li>
+                <li><a href="{{ site.baseurl }}/pages/projects/">Projects</a></li>
+              </ul>
+            </nav>
+            <div class="hamburger-menu">
+              <div class="hamburger-icon" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
           </div>
         </div>
-        
-        <nav id="nav-menu">
-          <ul>
-            <li><a href="{{ site.baseurl }}/">Home</a></li>
-            <li><a href="{{ site.baseurl }}/pages/education/">Education</a></li>
-            <li><a href="{{ site.baseurl }}/pages/publications/">Publications</a></li>
-            <li><a href="{{ site.baseurl }}/pages/work-experience/">Work Experience</a></li>
-            <li><a href="{{ site.baseurl }}/pages/projects/">Projects</a></li>
-          </ul>
-        </nav>
         
         {% if site.logo %}
           <img src="{{site.logo | relative_url}}" alt="Logo" />
