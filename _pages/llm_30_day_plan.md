@@ -8,6 +8,24 @@ permalink: /pages/llm_course/
 
 A comprehensive guide for mastering LLM and AI agent engineering with detailed daily breakdowns, resources, and practical tasks.
 
+## Weekly Breakdown
+
+- [**Week 1: Foundations & Core Concepts**](/pages/llm_course/week1/)  
+  Transformer architecture, PyTorch basics, tokenization, and fine-tuning fundamentals.
+
+- **Week 2: Core LLM Skills & Monitoring**  
+  Parameter-efficient fine-tuning, instruction tuning, RLHF, experiment tracking, prompt engineering, and evaluation. *(Coming soon)*
+
+- **Week 3: LLM Frameworks & Workflow Automation**  
+  LangChain, Flowise, LlamaIndex, Haystack, workflow automation, and vector databases. *(Coming soon)*
+
+- **Week 4: Deployment, Agents & Advanced Systems**  
+  Model deployment, optimization, agent frameworks, multi-modal models, and safety. *(Coming soon)*
+
+---
+
+*Select a week above to view the detailed daily itinerary and resources.*
+
 ## Week 1: Foundations & Core Concepts
 
 ### Day 1-2: Modern LLM Architecture
@@ -942,24 +960,6 @@ A comprehensive guide for mastering LLM and AI agent engineering with detailed d
    - Deploy complete system
    - Create comprehensive documentation
    - Set up monitoring and analytics
-
-## Weekly Breakdown
-
-- [**Week 1: Foundations & Core Concepts**](/pages/llm_course/week1/)  
-  Transformer architecture, PyTorch basics, tokenization, and fine-tuning fundamentals.
-
-- **Week 2: Core LLM Skills & Monitoring**  
-  Parameter-efficient fine-tuning, instruction tuning, RLHF, experiment tracking, prompt engineering, and evaluation. *(Coming soon)*
-
-- **Week 3: LLM Frameworks & Workflow Automation**  
-  LangChain, Flowise, LlamaIndex, Haystack, workflow automation, and vector databases. *(Coming soon)*
-
-- **Week 4: Deployment, Agents & Advanced Systems**  
-  Model deployment, optimization, agent frameworks, multi-modal models, and safety. *(Coming soon)*
-
----
-
-*Select a week above to view the detailed daily itinerary and resources.*
 
 ## Complete Toolkit Mastery List
 
