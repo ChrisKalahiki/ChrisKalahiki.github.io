@@ -13,13 +13,6 @@
   font-size: 1.8em;
 }
 
-/* Move nav and hamburger to the right on desktop */
-.header-right {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
 /* Control the logo size */
 header img {
   max-width: 200px; /* Adjust this value to make the logo smaller or larger */
@@ -32,7 +25,6 @@ header img {
 /* Hamburger Menu Styling */
 .hamburger-menu {
   position: relative;
-  margin-left: 20px;
 }
 
 .hamburger-icon {
@@ -160,37 +152,11 @@ a:hover {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
+  header {
+    text-align: center;
   }
-  .header-right {
-    width: 100%;
-    justify-content: flex-end;
-    margin-left: 0;
-  }
-  nav#nav-menu ul {
-    display: block;
-  }
-}
-
-@media (min-width: 769px) {
-  nav#nav-menu {
-    display: block !important;
-    max-height: none;
-    overflow: visible;
-    margin-bottom: 0;
-    margin-left: 20px;
-  }
-  nav#nav-menu ul {
-    display: flex;
-    gap: 10px;
-    margin: 0;
-  }
-  nav#nav-menu ul li {
-    margin-bottom: 0;
-  }
-  .hamburger-menu {
-    display: none;
+  
+  .wrapper {
+    padding: 15px;
   }
 }
