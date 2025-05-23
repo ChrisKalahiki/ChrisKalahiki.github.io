@@ -99,10 +99,10 @@ A comprehensive guide for mastering LLM and AI agent engineering with detailed d
 
 By the end of this 30-day program, you should be able to:
 
-1. **Week 1**: Understand transformer architecture and implement basic models in PyTorch
-2. **Week 2**: Fine-tune LLMs efficiently, engineer effective prompts, and evaluate model performance
-3. **Week 3**: Build complete RAG systems, create workflow automations, and deploy models
-4. **Week 4**: Develop sophisticated AI agents, implement multi-modal applications, and ensure model safety
+1. [**Week 1**](/pages/llm_course/week1/): Understand transformer architecture and implement basic models in PyTorch
+2. [**Week 2**](/pages/llm_course/week2/): Fine-tune LLMs efficiently, engineer effective prompts, and evaluate model performance
+3. [**Week 3**](/pages/llm_course/week3/): Build complete RAG systems, create workflow automations, and deploy models
+4. [**Week 4**](/pages/llm_course/week4/): Develop sophisticated AI agents, implement multi-modal applications, and ensure model safety
 
 ### Final Portfolio Projects
 - Custom fine-tuned model with LoRA/QLoRA
