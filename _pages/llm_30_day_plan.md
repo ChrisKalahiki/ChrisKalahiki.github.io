@@ -13,13 +13,13 @@ A comprehensive guide for mastering LLM and AI agent engineering with detailed d
 - [**Week 1: Foundations & Core Concepts**](/pages/llm_course/week1/)  
   Transformer architecture, PyTorch basics, tokenization, and fine-tuning fundamentals.
 
-- [**Week 2: Core LLM Skills & Monitoring**] (/pages/llm_course/week2/) 
+- [**Week 2: Core LLM Skills & Monitoring**](/pages/llm_course/week2/) 
   Parameter-efficient fine-tuning, instruction tuning, RLHF, experiment tracking, prompt engineering, and evaluation.
 
-- [**Week 3: LLM Frameworks & Workflow Automation**] (/pages/llm_course/week3/)   
+- [**Week 3: LLM Frameworks & Workflow Automation**](/pages/llm_course/week3/)   
   LangChain, Flowise, LlamaIndex, Haystack, workflow automation, and vector databases.
 
-- [**Week 4: Deployment, Agents & Advanced Systems**] (/pages/llm_course/week4/) 
+- [**Week 4: Deployment, Agents & Advanced Systems**](/pages/llm_course/week4/) 
   Model deployment, optimization, agent frameworks, multi-modal models, and safety.
 
 ---
