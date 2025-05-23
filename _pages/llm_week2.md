@@ -8,6 +8,7 @@ permalink: /pages/llm_course/week2/
 
 <details>
 <summary><strong>Day 8: Parameter-Efficient Fine-tuning (PEFT)</strong></summary>
+<div markdown="1">
 
 ### Morning: PEFT Fundamentals (4 hours)
 1. **PEFT Theory & Overview** (2 hours)
@@ -39,10 +40,12 @@ permalink: /pages/llm_course/week2/
      - Experiment with different LoRA ranks and configurations
      - Measure performance, memory usage, and training time
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 9: Instruction Tuning & RLHF</strong></summary>
+<div markdown="1">
 
 ### Morning: Instruction Tuning (4 hours)
 1. **Instruction Tuning Foundations** (2 hours)
@@ -81,10 +84,12 @@ permalink: /pages/llm_course/week2/
 - [Fine-tuning LLMs Efficiently with PEFT and LoRA](https://www.philschmid.de/fine-tune-flan-t5-peft)
 - [LoRA for Efficient LLM Fine-tuning](https://lightning.ai/pages/community/tutorial/lora-llm/)
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 10: Experiment Tracking with Weights & Biases</strong></summary>
+<div markdown="1">
 
 ### Morning: W&B Fundamentals (4 hours)
 1. **W&B Setup & Basic Tracking** (2 hours)
@@ -116,10 +121,12 @@ permalink: /pages/llm_course/week2/
      - Visualize model performance across different tasks
      - Set up automated model comparison workflows
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 11-12: Prompt Engineering</strong></summary>
+<div markdown="1">
 
 ### Day 11 Morning: Prompt Design Principles (4 hours)
 1. **Fundamentals of Prompt Engineering** (2 hours)
@@ -179,10 +186,12 @@ permalink: /pages/llm_course/week2/
      - Learn defensive prompting techniques
      - Practice secure prompt design
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 13-14: LLM Evaluation</strong></summary>
+<div markdown="1">
 
 ### Day 13: Evaluation Metrics & Methods
 
@@ -247,4 +256,5 @@ permalink: /pages/llm_course/week2/
      - Learn about evaluation data contamination
      - Practice statistical significance testing for model comparison
 
+</div>
 </details>

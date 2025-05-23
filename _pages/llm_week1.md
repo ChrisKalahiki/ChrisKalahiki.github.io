@@ -8,6 +8,7 @@ permalink: /pages/llm_course/week1/
 
 <details>
 <summary><strong>Day 1-2: Modern LLM Architecture</strong></summary>
+<div markdown="1">
 
 #### Essential Reading
 - **"Attention Is All You Need" (Original Transformer Paper)**
@@ -52,10 +53,12 @@ permalink: /pages/llm_course/week1/
 - **Experiment with a pre-trained model using Hugging Face**
   - Link: [https://huggingface.co/docs/transformers/quicktour](https://huggingface.co/docs/transformers/quicktour)
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 3: PyTorch Basics</strong></summary>
+<div markdown="1">
 
 #### Morning: Core PyTorch Concepts (4 hours)
 1. **Tensors & Operations** (2 hours)
@@ -79,10 +82,12 @@ permalink: /pages/llm_course/week1/
    - Practice: Implement SGD, Adam optimizers
    - Exercise: Write a complete training loop for a toy dataset
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 4: Applied PyTorch for NLP/LLMs</strong></summary>
+<div markdown="1">
 
 #### Morning: Working with Text Data (4 hours)
 1. **Text Processing in PyTorch** (2 hours)
@@ -113,10 +118,12 @@ permalink: /pages/llm_course/week1/
 - [PyTorch for Deep Learning](https://www.youtube.com/watch?v=GIsg-ZUy0MY) - Freecodecamp's comprehensive tutorial
 - [PyTorch Examples](https://github.com/pytorch/examples) - Official example implementations
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 5: Transformers Library Fundamentals</strong></summary>
+<div markdown="1">
 
 #### Morning: Core Concepts & Models (4 hours)
 1. **Introduction to Hugging Face Transformers** (1.5 hours)
@@ -148,10 +155,12 @@ permalink: /pages/llm_course/week1/
      - Handle tokenizer edge cases
      - Practice batch encoding for efficiency
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 6: Datasets & Fine-tuning</strong></summary>
+<div markdown="1">
 
 #### Morning: Hugging Face Datasets (4 hours)
 1. **Working with Datasets Library** (2 hours)
@@ -183,10 +192,12 @@ permalink: /pages/llm_course/week1/
      - Push models to the Hugging Face Hub
      - Document model cards effectively
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 7: Advanced Transformers Techniques</strong></summary>
+<div markdown="1">
 
 #### Morning: Efficient Fine-tuning (4 hours)
 1. **Parameter-Efficient Methods** (2 hours)
@@ -227,4 +238,5 @@ permalink: /pages/llm_course/week1/
 - [Hugging Face Forums](https://discuss.huggingface.co/)
 - [Model Hub](https://huggingface.co/models) - Explore state-of-the-art models
 
+</div>
 </details>

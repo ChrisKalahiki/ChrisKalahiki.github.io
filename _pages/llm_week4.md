@@ -8,6 +8,7 @@ permalink: /pages/llm_course/week4/
 
 <details>
 <summary><strong>Day 22-23: Deployment & Optimization</strong></summary>
+<div markdown="1">
 
 ### Day 22: Model Optimization Techniques
 
@@ -71,10 +72,12 @@ permalink: /pages/llm_course/week4/
      - Configure load balancers and CDNs
      - Set up monitoring and logging
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 24: LiteLLM & Model Management</strong></summary>
+<div markdown="1">
 
 ### Morning: LiteLLM Unified API (4 hours)
 1. **LiteLLM Setup** (2 hours)
@@ -104,10 +107,12 @@ permalink: /pages/llm_course/week4/
      - Implement intelligent routing
      - Set up budget alerts and controls
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 25-26: Building AI Agents</strong></summary>
+<div markdown="1">
 
 ### Day 25: Agent Fundamentals
 
@@ -170,10 +175,12 @@ permalink: /pages/llm_course/week4/
      - Implement agent safety measures
      - Set up agent analytics and logging
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 27: Multi-agent Systems & MCP</strong></summary>
+<div markdown="1">
 
 ### Morning: Multi-agent Communication (4 hours)
 1. **Agent Communication Patterns** (2 hours)
@@ -204,10 +211,12 @@ permalink: /pages/llm_course/week4/
      - Implement role-based conversations
      - Create automated workflows
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 28: Multi-modal Models</strong></summary>
+<div markdown="1">
 
 ### Morning: Vision-Language Models (4 hours)
 1. **Understanding Multi-modal Models** (2 hours)
@@ -237,10 +246,12 @@ permalink: /pages/llm_course/week4/
      - Implement multi-modal retrieval
      - Create rich content applications
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 29: Evaluation & Safety</strong></summary>
+<div markdown="1">
 
 ### Morning: Model Alignment (4 hours)
 1. **Alignment Techniques** (2 hours)
@@ -271,10 +282,12 @@ permalink: /pages/llm_course/week4/
      - Create content filtering systems
      - Design responsible AI workflows
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 30: End-to-End Project</strong></summary>
+<div markdown="1">
 
 ### Morning: Project Planning (2 hours)
 - **System Architecture Design**
@@ -298,4 +311,5 @@ permalink: /pages/llm_course/week4/
    - Create comprehensive documentation
    - Set up monitoring and analytics
 
+</div>
 </details>

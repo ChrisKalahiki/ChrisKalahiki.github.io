@@ -8,6 +8,7 @@ permalink: /pages/llm_course/week3/
 
 <details>
 <summary><strong>Day 15-16: LangChain & Flowise</strong></summary>
+<div markdown="1">
 
 ### Day 15: LangChain Fundamentals
 
@@ -71,10 +72,12 @@ permalink: /pages/llm_course/week3/
      - Share and collaborate on flows
      - Set up production workflows
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 17: LlamaIndex & Haystack</strong></summary>
+<div markdown="1">
 
 ### Morning: LlamaIndex for RAG (4 hours)
 1. **LlamaIndex Fundamentals** (2 hours)
@@ -105,10 +108,12 @@ permalink: /pages/llm_course/week3/
      - Compare performance and ease of use
      - Document pros and cons of each approach
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 18-19: Workflow Automation with N8n</strong></summary>
+<div markdown="1">
 
 ### Day 18: N8n Fundamentals
 
@@ -171,10 +176,12 @@ permalink: /pages/llm_course/week3/
      - Document and test the complete workflow
      - Create user guides and documentation
 
+</div>
 </details>
 
 <details>
 <summary><strong>Day 20-21: Vector Databases</strong></summary>
+<div markdown="1">
 
 ### Day 20: Vector Database Fundamentals
 
@@ -237,4 +244,5 @@ permalink: /pages/llm_course/week3/
      - Implement user authentication and rate limiting
      - Deploy with proper monitoring and scaling
 
+</div>
 </details>
