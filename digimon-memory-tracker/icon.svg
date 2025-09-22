@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3c72"/>
+      <stop offset="100%" stop-color="#2a5298"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#gradient)" rx="80"/>
+
+  <!-- Memory gauge track -->
+  <rect x="76" y="220" width="360" height="72" fill="#ffffff" rx="36" opacity="0.9"/>
+
+  <!-- Memory gauge markers -->
+  <g stroke="#333" stroke-width="2" opacity="0.7">
+    <!-- Left side markers -->
+    <line x1="96" y1="235" x2="96" y2="277"/>
+    <line x1="156" y1="240" x2="156" y2="272"/>
+    <line x1="216" y1="240" x2="216" y2="272"/>
+
+    <!-- Center marker -->
+    <line x1="256" y1="230" x2="256" y2="282" stroke-width="3"/>
+
+    <!-- Right side markers -->
+    <line x1="296" y1="240" x2="296" y2="272"/>
+    <line x1="356" y1="240" x2="356" y2="272"/>
+    <line x1="416" y1="235" x2="416" y2="277"/>
+  </g>
+
+  <!-- Memory indicator -->
+  <circle cx="320" cy="256" r="24" fill="#FF6B35" stroke="#ffffff" stroke-width="4"/>
+
+  <!-- Title text -->
+  <text x="256" y="140" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="32" font-weight="bold">DIGIMON</text>
+  <text x="256" y="175" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20">Memory Tracker</text>
+
+  <!-- Memory value -->
+  <text x="256" y="350" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="48" font-weight="bold">6</text>
+</svg>
