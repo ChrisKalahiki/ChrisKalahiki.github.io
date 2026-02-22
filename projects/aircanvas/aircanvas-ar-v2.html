@@ -1,0 +1,1284 @@
+---
+layout: null
+title: AirCanvas AR
+permalink: /aircanvas/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AirCanvas AR</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#0a0a0f;
+    --surface:rgba(10,10,18,0.85);
+    --surface-2:rgba(30,30,45,0.7);
+    --border:rgba(255,255,255,0.1);
+    --border-bright:rgba(255,255,255,0.2);
+    --text:#eef0ff;
+    --text-dim:#8888aa;
+    --accent:#00e5ff;
+    --accent-glow:rgba(0,229,255,0.35);
+    --draw-active:#ff3d71;
+    --draw-glow:rgba(255,61,113,0.5);
+    --success:#00e676;
+    --purple:#b388ff;
+    --orange:#ffab40;
+  }
+
+  body{
+    background:#000;color:var(--text);font-family:'Outfit',sans-serif;
+    overflow:hidden;height:100vh;height:100dvh;width:100vw;cursor:none;
+    -webkit-user-select:none;user-select:none;
+  }
+
+  /* ═══ LOADING ═══ */
+  #loading-screen{
+    position:fixed;inset:0;z-index:1000;background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    transition:opacity .6s,visibility .6s;
+  }
+  #loading-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  #loading-screen h1{
+    font-family:'JetBrains Mono',monospace;font-size:clamp(24px,5vw,44px);font-weight:700;
+    background:linear-gradient(135deg,var(--accent),var(--purple),var(--draw-active));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  #loading-screen .sub{color:var(--text-dim);font-size:14px;text-align:center;line-height:1.6;max-width:340px}
+  .loader{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #start-btn{
+    display:none;padding:14px 36px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    border:none;border-radius:12px;color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;
+    cursor:pointer;transition:transform .2s,box-shadow .2s;
+  }
+  #start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+  #loading-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)}
+
+  /* ═══ LAYER STACK ═══ */
+  #app-container{position:relative;width:100%;height:100%}
+  #webcam{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);z-index:0}
+  #vignette{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.35) 100%);pointer-events:none}
+  #draw-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
+  #particle-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+  #three-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+
+  /* ═══ CURSOR ═══ */
+  #cursor-ring{
+    position:fixed;width:32px;height:32px;border:2px solid var(--accent);border-radius:50%;
+    transform:translate(-50%,-50%);pointer-events:none;z-index:100;
+    transition:width .15s,height .15s,border-color .15s,box-shadow .15s,background .15s;display:none;
+  }
+  #cursor-ring.drawing{border-color:var(--draw-active);box-shadow:0 0 20px var(--draw-glow),0 0 50px var(--draw-glow);background:rgba(255,61,113,0.1)}
+  #cursor-ring.visible{display:block}
+
+  /* ═══ HAND PREVIEW ═══ */
+  #hand-preview{
+    position:absolute;bottom:16px;left:16px;width:clamp(90px,14vw,160px);aspect-ratio:4/3;
+    border-radius:12px;overflow:hidden;border:1px solid var(--border);z-index:20;
+    background:rgba(0,0,0,0.5);box-shadow:0 4px 24px rgba(0,0,0,0.5);backdrop-filter:blur(8px);
+  }
+  #hand-preview canvas{width:100%;height:100%}
+
+  /* ═══ TOOLBAR ═══ */
+  #toolbar-wrap{
+    position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:20;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .3s;
+  }
+  #toolbar-wrap.collapsed #toolbar{
+    transform:scaleY(0);opacity:0;pointer-events:none;max-height:0;padding:0 12px;margin:0;
+  }
+  #toolbar-wrap.collapsed #toolbar-secondary{
+    transform:scaleY(0);opacity:0;pointer-events:none;max-height:0;padding:0 12px;margin:0;
+  }
+
+  #toolbar,#toolbar-secondary{
+    display:flex;align-items:center;gap:4px;padding:6px 10px;
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    backdrop-filter:blur(24px);box-shadow:0 8px 40px rgba(0,0,0,0.5);
+    transform-origin:top center;transition:transform .3s,opacity .3s,max-height .3s,padding .3s;
+    max-height:200px;overflow:hidden;
+  }
+
+  #collapse-btn{
+    width:32px;height:20px;border:none;border-radius:10px;
+    background:var(--surface);border:1px solid var(--border);
+    color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:10px;transition:background .2s;backdrop-filter:blur(24px);z-index:21;
+  }
+  #collapse-btn:hover{background:var(--surface-2);color:var(--text)}
+
+  .tb{
+    width:36px;height:36px;border:none;border-radius:8px;background:transparent;
+    color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .2s,color .2s;position:relative;flex-shrink:0;
+  }
+  .tb:hover{background:var(--surface-2);color:var(--text)}
+  .tb.active{background:var(--surface-2);color:var(--accent)}
+  .tb svg{width:16px;height:16px}
+
+  .td{width:1px;height:20px;background:var(--border);margin:0 2px;flex-shrink:0}
+
+  .cb{
+    width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;
+    transition:transform .2s,border-color .2s;flex-shrink:0;
+  }
+  .cb:hover{transform:scale(1.15)}
+  .cb.active{border-color:#fff;transform:scale(1.15)}
+
+  #brush-size-d{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);min-width:22px;text-align:center}
+
+  .tb-3d{
+    background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(179,136,255,0.15))!important;
+    border:1px solid rgba(0,229,255,0.3)!important;color:var(--accent)!important;
+  }
+  .tb-3d:hover{box-shadow:0 0 16px var(--accent-glow);color:#fff!important}
+
+  /* ═══ COLOR PICKER PANEL ═══ */
+  #color-picker-panel{
+    position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:30;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:16px;backdrop-filter:blur(24px);box-shadow:0 12px 48px rgba(0,0,0,0.6);
+    display:none;flex-direction:column;gap:12px;width:240px;
+  }
+  #color-picker-panel.show{display:flex}
+  #color-picker-panel h4{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);font-weight:600}
+
+  #hue-canvas{width:100%;height:24px;border-radius:6px;cursor:crosshair}
+  #sat-light-canvas{width:100%;height:140px;border-radius:8px;cursor:crosshair}
+
+  .slider-row{display:flex;align-items:center;gap:8px}
+  .slider-row label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);width:55px}
+  .slider-row input[type=range]{
+    flex:1;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--surface-2);outline:none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;
+    border:2px solid var(--bg);
+  }
+  .slider-row .val{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);width:30px;text-align:right}
+
+  #color-preview-row{display:flex;align-items:center;gap:8px}
+  #color-preview-swatch{width:36px;height:36px;border-radius:8px;border:2px solid var(--border)}
+  #color-hex-input{
+    flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;
+    padding:6px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;
+    outline:none;
+  }
+  #color-hex-input:focus{border-color:var(--accent)}
+
+  .picker-btn{
+    padding:8px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;
+    font-size:12px;font-weight:600;cursor:pointer;
+  }
+
+  /* ═══ EXPORT PANEL ═══ */
+  #export-panel{
+    position:absolute;bottom:80px;right:16px;z-index:30;
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:14px;backdrop-filter:blur(24px);box-shadow:0 12px 48px rgba(0,0,0,0.6);
+    display:none;flex-direction:column;gap:8px;min-width:200px;
+  }
+  #export-panel.show{display:flex}
+  #export-panel h4{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);font-weight:600;margin-bottom:2px}
+
+  .export-btn{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;
+    background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);font-size:13px;cursor:pointer;transition:background .2s,border-color .2s;
+    font-family:'Outfit',sans-serif;
+  }
+  .export-btn:hover{background:rgba(0,229,255,0.08);border-color:var(--accent)}
+  .export-btn .fmt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);
+    background:rgba(0,229,255,0.1);padding:2px 8px;border-radius:4px;font-weight:700}
+  .export-btn .desc{color:var(--text-dim);font-size:11px}
+
+  /* ═══ MATERIAL PICKER ═══ */
+  #material-panel{
+    position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:30;
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:14px;backdrop-filter:blur(24px);box-shadow:0 12px 48px rgba(0,0,0,0.6);
+    display:none;gap:8px;flex-wrap:wrap;justify-content:center;width:260px;
+  }
+  #material-panel.show{display:flex}
+  #material-panel h4{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);font-weight:600}
+
+  .mat-btn{
+    width:52px;height:52px;border-radius:10px;border:2px solid var(--border);
+    cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:2px;font-size:9px;color:var(--text-dim);background:var(--surface-2);
+    transition:border-color .2s,transform .2s;font-family:'JetBrains Mono',monospace;
+  }
+  .mat-btn:hover{border-color:var(--accent);transform:scale(1.05)}
+  .mat-btn.active{border-color:var(--accent);color:var(--accent)}
+  .mat-btn .mat-icon{font-size:20px}
+
+  /* ═══ GESTURE GUIDE ═══ */
+  #gesture-panel{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:30;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:24px 28px;backdrop-filter:blur(24px);box-shadow:0 12px 48px rgba(0,0,0,0.6);
+    display:none;flex-direction:column;gap:10px;min-width:280px;
+  }
+  #gesture-panel.show{display:flex}
+  #gesture-panel h4{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text);font-weight:700;margin-bottom:4px}
+  .gg{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text-dim)}
+  .gg .ge{font-size:24px;width:36px;text-align:center}
+  .gg b{color:var(--text)}
+  .gclose{
+    margin-top:8px;padding:8px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:8px;color:var(--text-dim);font-size:12px;cursor:pointer;text-align:center;
+    font-family:'Outfit',sans-serif;
+  }
+  .gclose:hover{color:var(--text)}
+
+  /* ═══ STATUS ═══ */
+  #status-bar{
+    position:absolute;top:16px;right:16px;z-index:20;display:flex;align-items:center;gap:8px;
+    padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);backdrop-filter:blur(24px);
+  }
+  .sd{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pd 2s ease infinite}
+  .sd.no{background:var(--orange);animation:none}
+  @keyframes pd{0%,100%{opacity:1}50%{opacity:.4}}
+
+  #object-count{
+    position:absolute;top:16px;left:16px;z-index:20;padding:7px 12px;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);
+    backdrop-filter:blur(24px);display:none;
+  }
+  #object-count .cn{color:var(--accent);font-weight:700}
+
+  /* ═══ INSTRUCTIONS ═══ */
+  #instructions{
+    position:absolute;bottom:16px;right:16px;z-index:20;padding:14px 18px;
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    max-width:240px;font-size:11px;line-height:1.5;color:var(--text-dim);
+    backdrop-filter:blur(24px);box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    transition:opacity .4s,transform .4s;
+  }
+  #instructions h3{color:var(--text);font-size:11px;font-weight:600;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+  #instructions .gr{display:flex;align-items:center;gap:8px;margin:4px 0}
+  #instructions .gi{font-size:14px;width:22px;text-align:center}
+  #instructions .dm{
+    display:block;margin-top:6px;padding:5px 10px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:6px;color:var(--text-dim);font-family:'Outfit',sans-serif;font-size:10px;cursor:pointer;text-align:center;
+  }
+  #instructions .dm:hover{color:var(--text)}
+  #instructions.hidden{opacity:0;transform:translateY(10px);pointer-events:none}
+
+  /* ═══ TOAST ═══ */
+  #toast{
+    position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:200;
+    padding:10px 20px;background:var(--surface);border:1px solid var(--accent);
+    border-radius:10px;font-size:13px;color:var(--accent);font-weight:500;
+    backdrop-filter:blur(20px);box-shadow:0 4px 24px var(--accent-glow);
+    opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ═══ BRUSH MODE INDICATOR ═══ */
+  #brush-mode-tag{
+    position:absolute;top:80px;left:50%;transform:translateX(-50%);z-index:20;
+    padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);
+    backdrop-filter:blur(24px);display:none;letter-spacing:1px;
+  }
+  #brush-mode-tag.show{display:block}
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:640px){
+    #toolbar-wrap{top:auto;bottom:16px}
+    #toolbar,#toolbar-secondary{padding:5px 8px;gap:3px;flex-wrap:wrap;justify-content:center;max-width:96vw}
+    .tb{width:32px;height:32px}
+    .cb{width:20px;height:20px}
+    #hand-preview{width:80px;bottom:8px;left:8px}
+    #status-bar{top:8px;right:8px}
+    #instructions{display:none}
+    #color-picker-panel{width:220px;padding:12px}
+    #sat-light-canvas{height:100px}
+    #export-panel{bottom:140px;right:8px}
+    #material-panel{bottom:140px;width:240px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOADING ═══ -->
+<div id="loading-screen">
+  <h1>AirCanvas AR</h1>
+  <div class="loader" id="loader-spinner"></div>
+  <p class="sub">Draw in augmented reality. Extrude shapes into 3D. Use gestures to control everything — no touch required.</p>
+  <div id="loading-status">Loading hand tracking…</div>
+  <button id="start-btn" onclick="startApp()">Launch AR Canvas</button>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="app-container">
+  <video id="webcam" autoplay playsinline></video>
+  <div id="vignette"></div>
+  <canvas id="draw-canvas"></canvas>
+  <canvas id="particle-canvas"></canvas>
+  <canvas id="three-canvas"></canvas>
+
+  <div id="hand-preview"><canvas id="hand-overlay"></canvas></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ═══ TOOLBAR ═══ -->
+  <div id="toolbar-wrap">
+    <div id="toolbar">
+      <!-- Colors -->
+      <button class="cb active" style="background:#fff" data-color="#ffffff" onclick="setColor(this)"></button>
+      <button class="cb" style="background:#00e5ff" data-color="#00e5ff" onclick="setColor(this)"></button>
+      <button class="cb" style="background:#ff3d71" data-color="#ff3d71" onclick="setColor(this)"></button>
+      <button class="cb" style="background:#ffea00" data-color="#ffea00" onclick="setColor(this)"></button>
+      <button class="cb" style="background:#00e676" data-color="#00e676" onclick="setColor(this)"></button>
+      <button class="cb" style="background:#b388ff" data-color="#b388ff" onclick="setColor(this)"></button>
+      <!-- Custom color button -->
+      <button class="tb" onclick="toggleColorPicker()" title="Custom color" id="custom-color-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+
+      <div class="td"></div>
+
+      <!-- Opacity -->
+      <button class="tb" onclick="changeOpacity(-0.15)" title="Less opacity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"><circle cx="12" cy="12" r="8"/></svg>
+      </button>
+      <div id="opacity-d" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);min-width:26px;text-align:center">100</div>
+      <button class="tb" onclick="changeOpacity(0.15)" title="More opacity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.3"/></svg>
+      </button>
+
+      <div class="td"></div>
+
+      <!-- Brush size -->
+      <button class="tb" onclick="changeBrushSize(-2)" title="Smaller">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="18" y2="12"/></svg>
+      </button>
+      <div id="brush-size-d">4</div>
+      <button class="tb" onclick="changeBrushSize(2)" title="Bigger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+      </button>
+    </div>
+
+    <div id="toolbar-secondary">
+      <!-- Brush modes -->
+      <button class="tb active" id="mode-solid" onclick="setBrushMode('solid')" title="Solid brush">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+      </button>
+      <button class="tb" id="mode-neon" onclick="setBrushMode('neon')" title="Neon glow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </button>
+      <button class="tb" id="mode-rainbow" onclick="setBrushMode('rainbow')" title="Rainbow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17a10 10 0 0 0-20 0"/><path d="M19 17a7 7 0 0 0-14 0"/><path d="M16 17a4 4 0 0 0-8 0"/></svg>
+      </button>
+      <button class="tb" id="mode-spray" onclick="setBrushMode('spray')" title="Spray paint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="6" height="13" rx="1"/><path d="M12 2v4"/><path d="M8 4h0"/><path d="M16 4h0"/><path d="M6 6h0"/><path d="M18 6h0"/><circle cx="8" cy="4" r="0.5" fill="currentColor"/><circle cx="16" cy="4" r="0.5" fill="currentColor"/><circle cx="6" cy="6" r="0.5" fill="currentColor"/><circle cx="18" cy="6" r="0.5" fill="currentColor"/></svg>
+      </button>
+      <button class="tb" id="mode-particle" onclick="setBrushMode('particle')" title="Particle trails ✨">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+
+      <div class="td"></div>
+
+      <!-- Eraser -->
+      <button class="tb" id="eraser-btn" onclick="toggleEraser()" title="Eraser">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l9-9 8 8-4 4"/><path d="m6.5 13.5 5-5"/></svg>
+      </button>
+      <!-- Undo -->
+      <button class="tb" onclick="undoLast()" title="Undo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      </button>
+      <!-- Clear 2D -->
+      <button class="tb" onclick="clearCanvas()" title="Clear drawings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </button>
+
+      <div class="td"></div>
+
+      <!-- 3D button -->
+      <button class="tb tb-3d" onclick="make3D()" title="Extrude to 3D">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </button>
+      <!-- 3D Material -->
+      <button class="tb" onclick="toggleMaterialPanel()" title="3D material">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
+      </button>
+      <!-- Clear 3D -->
+      <button class="tb" onclick="clear3D()" title="Remove 3D objects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><line x1="4" y1="4" x2="20" y2="20" stroke-width="2.5"/></svg>
+      </button>
+
+      <div class="td"></div>
+
+      <!-- Export -->
+      <button class="tb" onclick="toggleExportPanel()" title="Save / Export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <!-- Gesture guide -->
+      <button class="tb" onclick="toggleGesturePanel()" title="Gesture controls">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v1"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+      </button>
+      <!-- Fullscreen -->
+      <button class="tb" onclick="toggleFullscreen()" title="Fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+    </div>
+
+    <button id="collapse-btn" onclick="toggleToolbar()">▲</button>
+  </div>
+
+  <!-- ═══ COLOR PICKER PANEL ═══ -->
+  <div id="color-picker-panel">
+    <h4>Custom Color</h4>
+    <canvas id="sat-light-canvas"></canvas>
+    <canvas id="hue-canvas"></canvas>
+    <div class="slider-row">
+      <label>Opacity</label>
+      <input type="range" id="opacity-slider" min="5" max="100" value="100" oninput="setOpacityFromSlider(this.value)">
+      <span class="val" id="opacity-slider-val">100</span>
+    </div>
+    <div id="color-preview-row">
+      <div id="color-preview-swatch"></div>
+      <input type="text" id="color-hex-input" value="#ffffff" maxlength="7" onchange="setColorFromHex(this.value)">
+    </div>
+    <button class="picker-btn" onclick="applyCustomColor()">Apply Color</button>
+  </div>
+
+  <!-- ═══ EXPORT PANEL ═══ -->
+  <div id="export-panel">
+    <h4>Export Drawing</h4>
+    <div class="export-btn" onclick="exportPNG()"><span class="fmt">PNG</span><div><b>Full Snapshot</b><div class="desc">Camera + drawing + 3D</div></div></div>
+    <div class="export-btn" onclick="exportTransparentPNG()"><span class="fmt">PNG</span><div><b>Transparent</b><div class="desc">Drawing only, no background</div></div></div>
+    <div class="export-btn" onclick="exportJPEG()"><span class="fmt">JPG</span><div><b>JPEG Snapshot</b><div class="desc">Compressed, smaller file</div></div></div>
+    <div class="export-btn" onclick="exportSVG()"><span class="fmt">SVG</span><div><b>Vector Paths</b><div class="desc">Scalable, editable in Figma</div></div></div>
+  </div>
+
+  <!-- ═══ MATERIAL PANEL ═══ -->
+  <div id="material-panel">
+    <h4>3D Material</h4>
+    <div class="mat-btn active" onclick="setMaterial('holographic')"><span class="mat-icon">💎</span>Holo</div>
+    <div class="mat-btn" onclick="setMaterial('glass')"><span class="mat-icon">🫧</span>Glass</div>
+    <div class="mat-btn" onclick="setMaterial('metal')"><span class="mat-icon">⚙️</span>Metal</div>
+    <div class="mat-btn" onclick="setMaterial('matte')"><span class="mat-icon">🧱</span>Matte</div>
+  </div>
+
+  <!-- ═══ GESTURE GUIDE ═══ -->
+  <div id="gesture-panel">
+    <h4>Gesture Controls</h4>
+    <div class="gg"><span class="ge">☝️</span><span><b>Index finger</b> — move cursor</span></div>
+    <div class="gg"><span class="ge">🤏</span><span><b>Pinch</b> — draw</span></div>
+    <div class="gg"><span class="ge">✋</span><span><b>Open palm</b> (3s hold) — undo</span></div>
+    <div class="gg"><span class="ge">✌️</span><span><b>Peace sign</b> — toggle eraser</span></div>
+    <div class="gg"><span class="ge">👊</span><span><b>Fist</b> (3s hold) — clear canvas</span></div>
+    <div class="gg"><span class="ge">🤙</span><span><b>Pinky + thumb</b> — make 3D</span></div>
+    <button class="gclose" onclick="toggleGesturePanel()">Close</button>
+  </div>
+
+  <!-- ═══ STATUS ═══ -->
+  <div id="status-bar">
+    <div class="sd no" id="status-dot"></div>
+    <span id="gesture-label">Waiting…</span>
+  </div>
+
+  <div id="object-count"><span class="cn" id="obj-num">0</span> 3D objects</div>
+
+  <div id="brush-mode-tag"></div>
+
+  <!-- ═══ INSTRUCTIONS ═══ -->
+  <div id="instructions">
+    <h3>Quick Start</h3>
+    <div class="gr"><span class="gi">🤏</span><span>Pinch to draw</span></div>
+    <div class="gr"><span class="gi">🧊</span><span>Tap 3D to extrude shapes</span></div>
+    <div class="gr"><span class="gi">✋</span><span>Gestures for hands-free control</span></div>
+    <button class="dm" onclick="this.parentElement.classList.add('hidden')">Got it</button>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<!-- ═══ DEPENDENCIES ═══ -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════
+let currentColor = '#ffffff';
+let brushSize = 4;
+let brushOpacity = 1.0;
+let brushMode = 'solid'; // solid, neon, rainbow, spray, particle
+let isEraser = false;
+let isDrawing = false;
+let prevPoint = null;
+let handDetected = false;
+let strokes = [];
+let strokeInProgress = false;
+let smoothX = 0, smoothY = 0;
+const SMOOTH = 0.45;
+let currentStrokePoints = [];
+let allStrokeRecords = [];
+let rainbowHue = 0;
+let selectedMaterial = 'holographic';
+
+// Gesture detection state
+let gestureTimer = null;
+let currentGesture = '';
+let gestureHoldStart = 0;
+const GESTURE_HOLD_MS = 1800;
+
+// Particles
+let particles = [];
+const particleCanvas = document.getElementById('particle-canvas');
+const particleCtx = particleCanvas.getContext('2d');
+
+// Color picker state
+let pickerHue = 0, pickerSat = 100, pickerLight = 50;
+
+// ════════════════════════════════════════════════════
+// DOM
+// ════════════════════════════════════════════════════
+const drawCanvas = document.getElementById('draw-canvas');
+const drawCtx = drawCanvas.getContext('2d');
+const video = document.getElementById('webcam');
+const overlayCanvas = document.getElementById('hand-overlay');
+const overlayCtx = overlayCanvas.getContext('2d');
+const cursorRing = document.getElementById('cursor-ring');
+const statusDot = document.getElementById('status-dot');
+const gestureLabel = document.getElementById('gesture-label');
+const loadingScreen = document.getElementById('loading-screen');
+const loadingStatus = document.getElementById('loading-status');
+const startBtn = document.getElementById('start-btn');
+const loaderSpinner = document.getElementById('loader-spinner');
+const threeCanvas = document.getElementById('three-canvas');
+const objNumEl = document.getElementById('obj-num');
+const objectCountEl = document.getElementById('object-count');
+const toastEl = document.getElementById('toast');
+const brushModeTag = document.getElementById('brush-mode-tag');
+
+// ════════════════════════════════════════════════════
+// THREE.JS VARIABLES (declared early to avoid TDZ)
+// ════════════════════════════════════════════════════
+let scene, cam3, renderer, objects3D = [];
+
+// ════════════════════════════════════════════════════
+// CANVAS SIZING
+// ════════════════════════════════════════════════════
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  drawCanvas.width = w; drawCanvas.height = h;
+  particleCanvas.width = w; particleCanvas.height = h;
+  threeCanvas.width = w; threeCanvas.height = h;
+  if (renderer && cam3) { renderer.setSize(w, h); cam3.aspect = w / h; cam3.updateProjectionMatrix(); }
+}
+window.addEventListener('resize', resize);
+
+// ════════════════════════════════════════════════════
+// THREE.JS SETUP
+// ════════════════════════════════════════════════════
+function initThree() {
+  scene = new THREE.Scene();
+  cam3 = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 1000);
+  cam3.position.z = 5;
+  renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, alpha: true, antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(5, 5, 5); scene.add(dl);
+  const pl = new THREE.PointLight(0x00e5ff, 1, 20); pl.position.set(0, 0, 5); scene.add(pl);
+
+  (function animate() {
+    requestAnimationFrame(animate);
+    objects3D.forEach((o, i) => {
+      const t = Date.now() * 0.001 + i * 1.5;
+      o.rotation.y += 0.008;
+      o.rotation.x = Math.sin(t * 0.5) * 0.1;
+      o.position.y += Math.sin(t * 1.2) * 0.0008;
+    });
+    renderer.render(scene, cam3);
+  })();
+}
+initThree();
+resize();
+
+// ════════════════════════════════════════════════════
+// PARTICLES
+// ════════════════════════════════════════════════════
+function spawnParticles(x, y, color) {
+  for (let i = 0; i < 3; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 3,
+      vy: (Math.random() - 0.5) * 3 - 1,
+      life: 1,
+      decay: 0.01 + Math.random() * 0.02,
+      size: 2 + Math.random() * 4,
+      color
+    });
+  }
+}
+
+function updateParticles() {
+  particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.02; // gravity
+    p.life -= p.decay;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+    particleCtx.beginPath();
+    particleCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    particleCtx.fillStyle = p.color;
+    particleCtx.globalAlpha = p.life * 0.8;
+    particleCtx.shadowColor = p.color;
+    particleCtx.shadowBlur = 10;
+    particleCtx.fill();
+    particleCtx.globalAlpha = 1;
+    particleCtx.shadowBlur = 0;
+  }
+  requestAnimationFrame(updateParticles);
+}
+updateParticles();
+
+// ════════════════════════════════════════════════════
+// MEDIAPIPE HANDS
+// ════════════════════════════════════════════════════
+const hands = new Hands({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}` });
+hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.6 });
+hands.onResults(onHandResults);
+let modelReady = false, cameraReady = false;
+function checkReady() { if (modelReady && cameraReady) { loadingStatus.textContent = 'Ready!'; loaderSpinner.style.display = 'none'; startBtn.style.display = 'block'; } }
+
+// ════════════════════════════════════════════════════
+// GESTURE RECOGNITION
+// ════════════════════════════════════════════════════
+function classifyGesture(lm) {
+  // Finger tip y vs pip y (in image space, lower y = higher on screen)
+  const tips = [8, 12, 16, 20];
+  const pips = [6, 10, 14, 18];
+  const extended = tips.map((t, i) => lm[t].y < lm[pips[i]].y);
+  const thumbOut = lm[4].x < lm[3].x; // for right hand (mirrored)
+
+  const [idx, mid, ring, pinky] = extended;
+
+  // Pinch: thumb and index close (handled separately)
+  const dx = lm[4].x - lm[8].x, dy = lm[4].y - lm[8].y, dz = (lm[4].z || 0) - (lm[8].z || 0);
+  const pinchDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  if (pinchDist < 0.06) return 'pinch';
+
+  // Open palm: all fingers extended
+  if (idx && mid && ring && pinky) return 'palm';
+
+  // Peace: index + middle extended, ring + pinky closed
+  if (idx && mid && !ring && !pinky) return 'peace';
+
+  // Fist: all fingers closed
+  if (!idx && !mid && !ring && !pinky) return 'fist';
+
+  // Shaka / hang loose: thumb + pinky out, others closed
+  if (!idx && !mid && !ring && pinky && thumbOut) return 'shaka';
+
+  // Point: only index extended
+  if (idx && !mid && !ring && !pinky) return 'point';
+
+  return 'unknown';
+}
+
+function handleGesture(gesture) {
+  if (gesture === currentGesture) {
+    // Check for hold gestures
+    const held = Date.now() - gestureHoldStart;
+    if (gesture === 'palm' && held > GESTURE_HOLD_MS && held < GESTURE_HOLD_MS + 100) {
+      undoLast(); showToast('✋ Undo (gesture)');
+    }
+    if (gesture === 'fist' && held > GESTURE_HOLD_MS && held < GESTURE_HOLD_MS + 100) {
+      clearCanvas(); showToast('👊 Canvas cleared (gesture)');
+    }
+    return;
+  }
+
+  // Gesture changed
+  const prev = currentGesture;
+  currentGesture = gesture;
+  gestureHoldStart = Date.now();
+
+  // Instant gestures
+  if (gesture === 'peace' && prev !== 'peace') {
+    toggleEraser(); showToast(isEraser ? '✌️ Eraser on' : '✌️ Eraser off');
+  }
+  if (gesture === 'shaka') {
+    make3D();
+  }
+}
+
+// ════════════════════════════════════════════════════
+// HAND RESULTS
+// ════════════════════════════════════════════════════
+function onHandResults(results) {
+  if (!modelReady) { modelReady = true; checkReady(); }
+
+  overlayCanvas.width = 320; overlayCanvas.height = 240;
+  overlayCtx.clearRect(0, 0, 320, 240);
+
+  if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+    const lm = results.multiHandLandmarks[0];
+    drawConnectors(overlayCtx, lm, HAND_CONNECTIONS, { color: 'rgba(0,229,255,0.5)', lineWidth: 1.5 });
+    drawLandmarks(overlayCtx, lm, { color: 'rgba(0,229,255,0.8)', lineWidth: 1, radius: 2 });
+
+    if (!handDetected) { handDetected = true; statusDot.classList.remove('no'); }
+
+    const indexTip = lm[8], thumbTip = lm[4];
+    const rawX = (1 - indexTip.x) * innerWidth;
+    const rawY = indexTip.y * innerHeight;
+    smoothX += SMOOTH * (rawX - smoothX);
+    smoothY += SMOOTH * (rawY - smoothY);
+    cursorRing.style.left = smoothX + 'px'; cursorRing.style.top = smoothY + 'px';
+    cursorRing.classList.add('visible');
+
+    // Gesture classification
+    const gesture = classifyGesture(lm);
+    handleGesture(gesture);
+
+    // Pinch for drawing
+    const dx = thumbTip.x - indexTip.x, dy = thumbTip.y - indexTip.y, dz = (thumbTip.z || 0) - (indexTip.z || 0);
+    const pinchDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    if (pinchDist < 0.06 && !isDrawing) {
+      isDrawing = true; prevPoint = null; currentStrokePoints = [];
+      if (!strokeInProgress) {
+        strokes.push(drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+        if (strokes.length > 30) strokes.shift();
+        strokeInProgress = true;
+      }
+    } else if (pinchDist > 0.09 && isDrawing) {
+      isDrawing = false; prevPoint = null; strokeInProgress = false;
+      if (currentStrokePoints.length > 5) {
+        allStrokeRecords.push({ points: [...currentStrokePoints], color: currentColor, brushSize, mode: brushMode });
+      }
+      currentStrokePoints = [];
+    }
+
+    if (isDrawing) {
+      cursorRing.classList.add('drawing');
+      gestureLabel.textContent = isEraser ? 'ERASING' : 'DRAWING';
+      const pt = { x: smoothX, y: smoothY };
+      currentStrokePoints.push(pt);
+
+      if (prevPoint) {
+        drawStroke(prevPoint, pt);
+      }
+      prevPoint = pt;
+    } else {
+      cursorRing.classList.remove('drawing');
+      if (gesture === 'point') gestureLabel.textContent = 'MOVE';
+      else if (gesture === 'palm') gestureLabel.textContent = 'PALM (hold=undo)';
+      else if (gesture === 'fist') gestureLabel.textContent = 'FIST (hold=clear)';
+      else if (gesture === 'peace') gestureLabel.textContent = 'PEACE';
+      else if (gesture === 'shaka') gestureLabel.textContent = 'SHAKA → 3D';
+      else gestureLabel.textContent = 'READY';
+      prevPoint = null;
+    }
+
+    const cs = isEraser ? brushSize * 4 + 8 : brushSize + 16;
+    cursorRing.style.width = cs + 'px'; cursorRing.style.height = cs + 'px';
+  } else {
+    if (handDetected) { handDetected = false; statusDot.classList.add('no'); gestureLabel.textContent = 'NO HAND'; }
+    cursorRing.classList.remove('visible', 'drawing');
+    isDrawing = false; prevPoint = null; strokeInProgress = false;
+    currentGesture = '';
+    if (currentStrokePoints.length > 5) {
+      allStrokeRecords.push({ points: [...currentStrokePoints], color: currentColor, brushSize, mode: brushMode });
+    }
+    currentStrokePoints = [];
+  }
+}
+
+// ════════════════════════════════════════════════════
+// BRUSH DRAWING
+// ════════════════════════════════════════════════════
+function drawStroke(from, to) {
+  if (isEraser) {
+    drawCtx.globalCompositeOperation = 'destination-out';
+    drawCtx.beginPath(); drawCtx.moveTo(from.x, from.y); drawCtx.lineTo(to.x, to.y);
+    drawCtx.strokeStyle = 'rgba(0,0,0,1)'; drawCtx.lineWidth = brushSize * 4;
+    drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.stroke();
+    drawCtx.globalCompositeOperation = 'source-over';
+    return;
+  }
+
+  let color = currentColor;
+
+  switch (brushMode) {
+    case 'solid':
+      drawCtx.globalAlpha = brushOpacity;
+      drawCtx.beginPath(); drawCtx.moveTo(from.x, from.y); drawCtx.lineTo(to.x, to.y);
+      drawCtx.strokeStyle = color; drawCtx.lineWidth = brushSize;
+      drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.stroke();
+      drawCtx.globalAlpha = 1;
+      break;
+
+    case 'neon':
+      drawCtx.globalAlpha = brushOpacity;
+      drawCtx.beginPath(); drawCtx.moveTo(from.x, from.y); drawCtx.lineTo(to.x, to.y);
+      drawCtx.strokeStyle = color; drawCtx.lineWidth = brushSize;
+      drawCtx.shadowColor = color; drawCtx.shadowBlur = brushSize * 3;
+      drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.stroke();
+      // Inner bright core
+      drawCtx.strokeStyle = '#fff'; drawCtx.lineWidth = Math.max(1, brushSize * 0.3);
+      drawCtx.shadowBlur = brushSize; drawCtx.stroke();
+      drawCtx.shadowBlur = 0; drawCtx.globalAlpha = 1;
+      break;
+
+    case 'rainbow':
+      rainbowHue = (rainbowHue + 2) % 360;
+      color = `hsl(${rainbowHue}, 100%, 60%)`;
+      drawCtx.globalAlpha = brushOpacity;
+      drawCtx.beginPath(); drawCtx.moveTo(from.x, from.y); drawCtx.lineTo(to.x, to.y);
+      drawCtx.strokeStyle = color; drawCtx.lineWidth = brushSize;
+      drawCtx.shadowColor = color; drawCtx.shadowBlur = brushSize * 2;
+      drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.stroke();
+      drawCtx.shadowBlur = 0; drawCtx.globalAlpha = 1;
+      break;
+
+    case 'spray': {
+      drawCtx.globalAlpha = brushOpacity * 0.6;
+      const density = brushSize * 3;
+      const radius = brushSize * 2.5;
+      for (let i = 0; i < density; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * radius;
+        const lx = to.x + Math.cos(angle) * r;
+        const ly = to.y + Math.sin(angle) * r;
+        const dotSize = Math.random() * 1.5 + 0.5;
+        drawCtx.beginPath();
+        drawCtx.arc(lx, ly, dotSize, 0, Math.PI * 2);
+        drawCtx.fillStyle = color;
+        drawCtx.fill();
+      }
+      drawCtx.globalAlpha = 1;
+      break;
+    }
+
+    case 'particle':
+      drawCtx.globalAlpha = brushOpacity;
+      drawCtx.beginPath(); drawCtx.moveTo(from.x, from.y); drawCtx.lineTo(to.x, to.y);
+      drawCtx.strokeStyle = color; drawCtx.lineWidth = brushSize;
+      drawCtx.shadowColor = color; drawCtx.shadowBlur = brushSize * 1.5;
+      drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.stroke();
+      drawCtx.shadowBlur = 0; drawCtx.globalAlpha = 1;
+      spawnParticles(to.x, to.y, color);
+      break;
+  }
+}
+
+// ════════════════════════════════════════════════════
+// 3D CREATION
+// ════════════════════════════════════════════════════
+function getMaterial(color) {
+  const col = new THREE.Color(color);
+  switch (selectedMaterial) {
+    case 'glass':
+      return new THREE.MeshPhongMaterial({
+        color: col, transparent: true, opacity: 0.35,
+        shininess: 200, reflectivity: 1, refractionRatio: 0.98,
+        side: THREE.DoubleSide, specular: new THREE.Color(0xffffff),
+      });
+    case 'metal':
+      return new THREE.MeshPhongMaterial({
+        color: col, shininess: 300, specular: new THREE.Color(0xaaaaaa),
+        emissive: col, emissiveIntensity: 0.05, side: THREE.DoubleSide,
+      });
+    case 'matte':
+      return new THREE.MeshLambertMaterial({
+        color: col, side: THREE.DoubleSide,
+      });
+    case 'holographic':
+    default:
+      return new THREE.MeshPhongMaterial({
+        color: col, emissive: col, emissiveIntensity: 0.3,
+        transparent: true, opacity: 0.85, shininess: 100, side: THREE.DoubleSide,
+      });
+  }
+}
+
+function make3D() {
+  if (allStrokeRecords.length === 0) { showToast('Draw a shape first'); return; }
+  const last = allStrokeRecords[allStrokeRecords.length - 1];
+  const pts = last.points;
+  if (pts.length < 5) { showToast('Shape too small'); return; }
+
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  pts.forEach(p => { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); });
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  const w = maxX - minX, h = maxY - minY, sz = Math.max(w, h);
+
+  const shape = classifyShape(pts, w, h);
+  const ndcX = (cx / innerWidth) * 2 - 1, ndcY = -(cy / innerHeight) * 2 + 1;
+  const wx = ndcX * 4, wy = ndcY * 2.5;
+  const scale = Math.max(0.3, Math.min(2.5, sz / 200));
+
+  const mat = getMaterial(last.color);
+  const wireMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(last.color), wireframe: true, transparent: true, opacity: 0.15 });
+
+  let mesh;
+  switch (shape) {
+    case 'circle': mesh = new THREE.Mesh(new THREE.SphereGeometry(scale * 0.5, 32, 32), mat); showToast('🔮 Sphere'); break;
+    case 'rectangle': mesh = new THREE.Mesh(new THREE.BoxGeometry(scale * (w / sz), scale * (h / sz), scale * 0.4), mat); showToast('📦 Box'); break;
+    case 'triangle': mesh = new THREE.Mesh(new THREE.ConeGeometry(scale * 0.4, scale * 0.8, 3), mat); showToast('🔺 Tetrahedron'); break;
+    case 'line': mesh = new THREE.Mesh(new THREE.CylinderGeometry(scale * 0.08, scale * 0.08, scale, 16), mat);
+      mesh.rotation.z = Math.atan2(pts[pts.length - 1].y - pts[0].y, pts[pts.length - 1].x - pts[0].x);
+      showToast('🔷 Cylinder'); break;
+    default: mesh = createExtruded(pts, cx, cy, scale, last.color); showToast('✨ Extruded'); break;
+  }
+
+  if (mesh) {
+    mesh.position.set(wx, wy, 0);
+    mesh.add(new THREE.Mesh(mesh.geometry.clone(), wireMat));
+    const glow = new THREE.PointLight(new THREE.Color(last.color).getHex(), 0.5, 3);
+    glow.position.set(0, 0, 0.5); mesh.add(glow);
+    scene.add(mesh); objects3D.push(mesh); updateObjCount();
+    mesh.scale.set(0.01, 0.01, 0.01); animScale(mesh, scale);
+  }
+}
+
+function animScale(m, t) {
+  let p = 0;
+  (function s() { p += 0.05; if (p >= 1) { m.scale.set(t, t, t); return; }
+    const v = t * (1 - Math.pow(1 - p, 3)); m.scale.set(v, v, v); requestAnimationFrame(s); })();
+}
+
+function createExtruded(pts, cx, cy, scale, color) {
+  const simp = simplify(pts, 4);
+  if (simp.length < 3) return null;
+  const sh = new THREE.Shape();
+  const ns = scale * 0.005;
+  sh.moveTo((simp[0].x - cx) * ns, -(simp[0].y - cy) * ns);
+  for (let i = 1; i < simp.length; i++) sh.lineTo((simp[i].x - cx) * ns, -(simp[i].y - cy) * ns);
+  sh.closePath();
+  try {
+    const geo = new THREE.ExtrudeGeometry(sh, { steps: 1, depth: scale * 0.25, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 2 });
+    return new THREE.Mesh(geo, getMaterial(color));
+  } catch { return new THREE.Mesh(new THREE.TorusGeometry(scale * 0.3, scale * 0.1, 16, 32), getMaterial(color)); }
+}
+
+function classifyShape(pts, w, h) {
+  const n = pts.length;
+  if (n < 8) return 'freeform';
+  const s2e = dist(pts[0], pts[n - 1]);
+  let tl = 0; for (let i = 1; i < n; i++) tl += dist(pts[i - 1], pts[i]);
+  if (tl > 0 && s2e / tl > 0.85) return 'line';
+  if (s2e >= tl * 0.15) return 'freeform';
+  const mcx = pts.reduce((s, p) => s + p.x, 0) / n;
+  const mcy = pts.reduce((s, p) => s + p.y, 0) / n;
+  const ds = pts.map(p => dist(p, { x: mcx, y: mcy }));
+  const avg = ds.reduce((a, b) => a + b) / n;
+  const v = ds.reduce((s, d) => s + (d - avg) ** 2, 0) / n;
+  if (Math.sqrt(v) / avg < 0.2) return 'circle';
+  const corners = detectCorners(pts);
+  if (corners >= 2 && corners <= 4 && w / h > 0.4 && w / h < 2.5) return corners === 3 ? 'triangle' : 'rectangle';
+  return 'freeform';
+}
+function detectCorners(pts) {
+  const step = Math.max(1, Math.floor(pts.length / 30)); let c = 0;
+  for (let i = step; i < pts.length - step; i += step) {
+    const a1 = Math.atan2(pts[i].y - pts[i - step].y, pts[i].x - pts[i - step].x);
+    const a2 = Math.atan2(pts[Math.min(i + step, pts.length - 1)].y - pts[i].y, pts[Math.min(i + step, pts.length - 1)].x - pts[i].x);
+    let d = Math.abs(a2 - a1); if (d > Math.PI) d = 2 * Math.PI - d;
+    if (d > 0.5) c++;
+  }
+  return Math.min(c, 6);
+}
+function simplify(pts, tol) { const r = [pts[0]]; for (let i = 1; i < pts.length; i++) if (dist(pts[i], r[r.length - 1]) > tol) r.push(pts[i]); return r; }
+function dist(a, b) { return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2); }
+
+// ════════════════════════════════════════════════════
+// COLOR PICKER
+// ════════════════════════════════════════════════════
+const hueCanvas = document.getElementById('hue-canvas');
+const hueCtx = hueCanvas.getContext('2d');
+const slCanvas = document.getElementById('sat-light-canvas');
+const slCtx = slCanvas.getContext('2d');
+
+function drawHueBar() {
+  hueCanvas.width = hueCanvas.offsetWidth; hueCanvas.height = 24;
+  const grad = hueCtx.createLinearGradient(0, 0, hueCanvas.width, 0);
+  for (let i = 0; i <= 360; i += 30) grad.addColorStop(i / 360, `hsl(${i},100%,50%)`);
+  hueCtx.fillStyle = grad; hueCtx.fillRect(0, 0, hueCanvas.width, 24);
+}
+
+function drawSLCanvas() {
+  slCanvas.width = slCanvas.offsetWidth; slCanvas.height = slCanvas.offsetHeight || 140;
+  const w = slCanvas.width, h = slCanvas.height;
+  for (let x = 0; x < w; x++) {
+    for (let y = 0; y < h; y++) {
+      const s = (x / w) * 100;
+      const l = 100 - (y / h) * 100;
+      slCtx.fillStyle = `hsl(${pickerHue},${s}%,${l}%)`;
+      slCtx.fillRect(x, y, 1, 1);
+    }
+  }
+}
+
+function updatePickerPreview() {
+  const hex = hslToHex(pickerHue, pickerSat, pickerLight);
+  document.getElementById('color-preview-swatch').style.background = hex;
+  document.getElementById('color-hex-input').value = hex;
+}
+
+hueCanvas.addEventListener('pointerdown', e => {
+  const pick = ev => { const r = hueCanvas.getBoundingClientRect(); pickerHue = Math.round(((ev.clientX - r.left) / r.width) * 360) % 360; drawSLCanvas(); updatePickerPreview(); };
+  pick(e);
+  const up = () => { window.removeEventListener('pointermove', pick); window.removeEventListener('pointerup', up); };
+  window.addEventListener('pointermove', pick); window.addEventListener('pointerup', up);
+});
+
+slCanvas.addEventListener('pointerdown', e => {
+  const pick = ev => { const r = slCanvas.getBoundingClientRect(); pickerSat = Math.round(((ev.clientX - r.left) / r.width) * 100); pickerLight = Math.round(100 - ((ev.clientY - r.top) / r.height) * 100); updatePickerPreview(); };
+  pick(e);
+  const up = () => { window.removeEventListener('pointermove', pick); window.removeEventListener('pointerup', up); };
+  window.addEventListener('pointermove', pick); window.addEventListener('pointerup', up);
+});
+
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const f = n => { const k = (n + h / 30) % 12; return l - s * Math.min(l, 1 - l) * Math.max(-1, Math.min(k - 3, 9 - k, 1)); };
+  return '#' + [f(0), f(8), f(4)].map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+}
+
+function setColorFromHex(hex) {
+  if (/^#[0-9a-fA-F]{6}$/.test(hex)) { document.getElementById('color-preview-swatch').style.background = hex; }
+}
+
+function applyCustomColor() {
+  const hex = document.getElementById('color-hex-input').value;
+  if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+    currentColor = hex; isEraser = false;
+    document.querySelectorAll('.cb').forEach(b => b.classList.remove('active'));
+    document.getElementById('eraser-btn').classList.remove('active');
+    toggleColorPicker();
+    showToast('🎨 Color applied');
+  }
+}
+
+function toggleColorPicker() {
+  const p = document.getElementById('color-picker-panel');
+  const show = !p.classList.contains('show');
+  closeAllPanels();
+  if (show) { p.classList.add('show'); drawHueBar(); drawSLCanvas(); updatePickerPreview(); }
+}
+
+// ════════════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════════════
+function compositeCanvas(includeCamera, includeDrawing, include3D) {
+  const c = document.createElement('canvas'); c.width = innerWidth; c.height = innerHeight;
+  const ctx = c.getContext('2d');
+  if (includeCamera) { ctx.save(); ctx.translate(c.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0, c.width, c.height); ctx.restore(); }
+  if (includeDrawing) ctx.drawImage(drawCanvas, 0, 0);
+  if (include3D) ctx.drawImage(threeCanvas, 0, 0);
+  return c;
+}
+
+function exportPNG() {
+  const c = compositeCanvas(true, true, true);
+  dl(c.toDataURL('image/png'), 'aircanvas-ar-' + Date.now() + '.png');
+  showToast('📸 PNG saved'); toggleExportPanel();
+}
+
+function exportTransparentPNG() {
+  const c = compositeCanvas(false, true, true);
+  dl(c.toDataURL('image/png'), 'aircanvas-transparent-' + Date.now() + '.png');
+  showToast('📸 Transparent PNG saved'); toggleExportPanel();
+}
+
+function exportJPEG() {
+  const c = compositeCanvas(true, true, true);
+  dl(c.toDataURL('image/jpeg', 0.85), 'aircanvas-ar-' + Date.now() + '.jpg');
+  showToast('📸 JPEG saved'); toggleExportPanel();
+}
+
+function exportSVG() {
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${innerWidth}" height="${innerHeight}" viewBox="0 0 ${innerWidth} ${innerHeight}">`;
+  svg += `<rect width="100%" height="100%" fill="transparent"/>`;
+
+  allStrokeRecords.forEach(stroke => {
+    if (stroke.points.length < 2) return;
+    let d = `M ${stroke.points[0].x.toFixed(1)} ${stroke.points[0].y.toFixed(1)}`;
+    for (let i = 1; i < stroke.points.length; i++) {
+      d += ` L ${stroke.points[i].x.toFixed(1)} ${stroke.points[i].y.toFixed(1)}`;
+    }
+    svg += `<path d="${d}" stroke="${stroke.color}" stroke-width="${stroke.brushSize}" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${brushOpacity}"/>`;
+  });
+
+  svg += `</svg>`;
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  dl(URL.createObjectURL(blob), 'aircanvas-' + Date.now() + '.svg');
+  showToast('🖼 SVG exported'); toggleExportPanel();
+}
+
+function dl(href, name) {
+  const a = document.createElement('a'); a.href = href; a.download = name; a.click();
+  if (href.startsWith('blob:')) setTimeout(() => URL.revokeObjectURL(href), 1000);
+}
+
+// ════════════════════════════════════════════════════
+// UI ACTIONS
+// ════════════════════════════════════════════════════
+function setColor(btn) {
+  document.querySelectorAll('.cb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentColor = btn.dataset.color; isEraser = false;
+  document.getElementById('eraser-btn').classList.remove('active');
+}
+
+function changeBrushSize(d) {
+  brushSize = Math.max(1, Math.min(30, brushSize + d));
+  document.getElementById('brush-size-d').textContent = brushSize;
+}
+
+function changeOpacity(d) {
+  brushOpacity = Math.max(0.05, Math.min(1, brushOpacity + d));
+  document.getElementById('opacity-d').textContent = Math.round(brushOpacity * 100);
+  document.getElementById('opacity-slider').value = Math.round(brushOpacity * 100);
+  document.getElementById('opacity-slider-val').textContent = Math.round(brushOpacity * 100);
+}
+
+function setOpacityFromSlider(v) {
+  brushOpacity = v / 100;
+  document.getElementById('opacity-d').textContent = Math.round(brushOpacity * 100);
+  document.getElementById('opacity-slider-val').textContent = v;
+}
+
+function toggleEraser() {
+  isEraser = !isEraser;
+  document.getElementById('eraser-btn').classList.toggle('active', isEraser);
+}
+
+function setBrushMode(mode) {
+  brushMode = mode;
+  ['solid', 'neon', 'rainbow', 'spray', 'particle'].forEach(m => {
+    document.getElementById('mode-' + m).classList.toggle('active', m === mode);
+  });
+  const tag = brushModeTag;
+  tag.textContent = mode.toUpperCase();
+  tag.classList.add('show');
+  setTimeout(() => tag.classList.remove('show'), 1500);
+}
+
+function setMaterial(mat) {
+  selectedMaterial = mat;
+  document.querySelectorAll('.mat-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(mat.slice(0, 4))));
+  showToast('Material: ' + mat);
+}
+
+function clearCanvas() {
+  strokes.push(drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+  drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  allStrokeRecords = [];
+}
+
+function undoLast() {
+  if (strokes.length > 0) { drawCtx.putImageData(strokes.pop(), 0, 0); allStrokeRecords.pop(); }
+}
+
+function clear3D() {
+  objects3D.forEach(o => scene.remove(o)); objects3D = []; updateObjCount(); showToast('3D cleared');
+}
+
+function updateObjCount() {
+  objNumEl.textContent = objects3D.length;
+  objectCountEl.style.display = objects3D.length > 0 ? 'block' : 'none';
+}
+
+function closeAllPanels() {
+  document.getElementById('color-picker-panel').classList.remove('show');
+  document.getElementById('export-panel').classList.remove('show');
+  document.getElementById('material-panel').classList.remove('show');
+  document.getElementById('gesture-panel').classList.remove('show');
+}
+
+function toggleExportPanel() { const p = document.getElementById('export-panel'); const s = !p.classList.contains('show'); closeAllPanels(); if (s) p.classList.add('show'); }
+function toggleMaterialPanel() { const p = document.getElementById('material-panel'); const s = !p.classList.contains('show'); closeAllPanels(); if (s) p.classList.add('show'); }
+function toggleGesturePanel() { const p = document.getElementById('gesture-panel'); const s = !p.classList.contains('show'); closeAllPanels(); if (s) p.classList.add('show'); }
+
+function toggleToolbar() {
+  const w = document.getElementById('toolbar-wrap');
+  const b = document.getElementById('collapse-btn');
+  w.classList.toggle('collapsed');
+  b.textContent = w.classList.contains('collapsed') ? '▼' : '▲';
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen();
+}
+
+function showToast(msg) {
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  clearTimeout(toastEl._t); toastEl._t = setTimeout(() => toastEl.classList.remove('show'), 2200);
+}
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+async function startApp() {
+  loadingScreen.classList.add('hidden');
+  const camera = new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }, width: 1280, height: 720, facingMode: 'user' });
+  camera.start();
+}
+
+async function init() {
+  try {
+    loadingStatus.textContent = 'Requesting camera access…';
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } } });
+    s.getTracks().forEach(t => t.stop());
+    cameraReady = true; loadingStatus.textContent = 'Loading hand tracking model…'; checkReady();
+    const tc = document.createElement('canvas'); tc.width = 10; tc.height = 10;
+    await hands.send({ image: tc });
+  } catch (err) {
+    loadingStatus.textContent = 'Camera access denied. Please allow camera and refresh.';
+    loaderSpinner.style.display = 'none'; console.error(err);
+  }
+}
+init();
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'z' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); undoLast(); }
+  if (e.key === 'e') toggleEraser();
+  if (e.key === 'c' && !e.ctrlKey && !e.metaKey) clearCanvas();
+  if (e.key === '[') changeBrushSize(-2);
+  if (e.key === ']') changeBrushSize(2);
+  if (e.key === '3') make3D();
+  if (e.key === 'f') toggleFullscreen();
+  if (e.key === 'Tab') { e.preventDefault(); toggleToolbar(); }
+  if (e.key === '1') setBrushMode('solid');
+  if (e.key === '2') setBrushMode('neon');
+  if (e.key === '4') setBrushMode('rainbow');
+  if (e.key === '5') setBrushMode('spray');
+  if (e.key === '6') setBrushMode('particle');
+});
+
+// Close panels on outside click
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('#color-picker-panel, #export-panel, #material-panel, #gesture-panel, #toolbar, #toolbar-secondary')) closeAllPanels();
+});
+</script>
+</body>
+</html>
