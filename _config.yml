@@ -14,8 +14,6 @@ url: "https://chriskalahiki.github.io"
 permalink: pretty
 include: 
   - _pages
-exclude:
-  - [digimon-memory-tracker/]
 
 # Navigation structure
 collections:
