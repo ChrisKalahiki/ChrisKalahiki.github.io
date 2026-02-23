@@ -15,7 +15,7 @@ permalink: pretty
 include: 
   - _pages
 exclude:
-  - [digimon-memory-tracker/]
+  - vendor/
 
 # Navigation structure
 collections:
