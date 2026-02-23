@@ -46,6 +46,15 @@ One of my first machine learning models was a CNN model for identifying street s
 - Projects exploring generative models for art and music creation.
 - **Technologies**: GANs, VAEs, PyTorch -->
 
+## Digimon TCG Memory Tracker
+A mobile-optimized memory tracker for the Digimon Trading Card Game. Installable as a PWA.
+- **Technologies**: React, TypeScript, Vite
+- **Link**: [Open Tracker](/digimon-memory-tracker/)
+
+## AirCanvas AR
+An augmented reality drawing application.
+- **Link**: [Open AirCanvas](/aircanvas/)
+
 ## More Projects Coming Soon
 
 I'm constantly working on new projects. Check back for updates or visit my [GitHub profile](https://github.com/ChrisKalahiki) for the latest work.
