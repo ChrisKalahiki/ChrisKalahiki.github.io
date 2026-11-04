@@ -23,7 +23,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.6'
+          ruby-version: '3.4'
           bundler-cache: true
           cache-version: 0
 
@@ -32,7 +32,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Build with Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_url }}"
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
           PAGES_REPO_NWO: ${{ github.repository }}
