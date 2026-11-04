@@ -10,7 +10,7 @@ plugins:
 
 # Jekyll settings
 baseurl: ""
-url: "https://chriskalahiki.github.io"
+url: "https://chriskalahiki.info"
 permalink: pretty
 include: 
   - _pages
