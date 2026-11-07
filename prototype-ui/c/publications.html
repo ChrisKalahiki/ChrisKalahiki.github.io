@@ -1,0 +1,81 @@
+<!doctype html>
+<!-- PROTOTYPE variant C (al-folio style approximation). Throwaway; lives only on the prototype/ui-options branch. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>publications — C</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="inner">
+      <a class="brand" href="index.html"><b>Chris</b> Kalahiki</a>
+      <nav>
+        <a href="index.html">about</a>
+        <a href="publications.html" aria-current="page">publications</a>
+        <a href="#">projects</a>
+        <a href="#">education</a>
+        <a href="#">experience</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="post-title">publications</h1>
+    <p class="desc">Also on <a href="https://scholar.google.com/citations?user=Y-Zcnf0AAAAJ">Google Scholar</a> and <a href="https://orcid.org/0000-0003-1513-5656">ORCID</a>.</p>
+
+    <h2 class="year">2023</h2>
+    <ol class="bibliography">
+      <li>
+        <div class="abbr"><span>CSBJ</span></div>
+        <div>
+          <div class="title">Evaluation of breast tumor morphologies from African American and Caucasian patients</div>
+          <div class="author">A. Stone, <span class="me">C. Kalahiki</span>, L. Li, N. Hubig, F. Iuricich, and H. Dunn</div>
+          <div class="periodical">Computational and Structural Biotechnology Journal, vol. 21, pp. 3459–3465, 2023</div>
+          <div class="links"><button type="button" data-bib>Bib</button><a href="https://doi.org/10.1016/j.csbj.2023.06.019">DOI</a></div>
+          <pre class="bibtex">@article{stone2023evaluation,
+  title   = {Evaluation of breast tumor morphologies from African American and Caucasian patients},
+  author  = {Stone, A. and Kalahiki, C. and Li, L. and Hubig, N. and Iuricich, F. and Dunn, H.},
+  journal = {Computational and Structural Biotechnology Journal},
+  volume  = {21},
+  pages   = {3459--3465},
+  year    = {2023},
+  doi     = {10.1016/j.csbj.2023.06.019}
+}</pre>
+        </div>
+      </li>
+    </ol>
+
+    <h2 class="year">2020</h2>
+    <ol class="bibliography">
+      <li>
+        <div class="abbr"><span>Thesis</span></div>
+        <div>
+          <div class="title">Computer Vision for Inventory Management Systems</div>
+          <div class="author"><span class="me">C. Kalahiki</span></div>
+          <div class="periodical">M.S. thesis, Louisiana Tech University, 2020</div>
+          <div class="links"><button type="button" data-bib>Bib</button></div>
+          <pre class="bibtex">@mastersthesis{kalahiki2020computer,
+  title  = {Computer Vision for Inventory Management Systems},
+  author = {Kalahiki, C.},
+  school = {Louisiana Tech University},
+  year   = {2020},
+  note   = {ProQuest 29257581}
+}</pre>
+        </div>
+      </li>
+    </ol>
+  </main>
+
+  <footer>© 2026 Chris Kalahiki. Powered by Jekyll with al-folio theme.</footer>
+  <script>
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-bib]');
+      if (btn) btn.closest('li').querySelector('.bibtex').classList.toggle('open');
+    });
+  </script>
+  <script src="../switcher.js"></script>
+</body>
+</html>

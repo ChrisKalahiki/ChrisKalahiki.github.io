@@ -1,0 +1,41 @@
+/* PROTOTYPE variant A: keep pages-themes/minimal, layer dark mode on top via tokens. */
+:root {
+  --bg: #fff;
+  --text: #727272;
+  --heading: #222;
+  --subheading: #494949;
+  --link: #267cb9;
+  --link-hover: #069;
+  --rule: #e5e5e5;
+  --nav-bg: #f5f5f5;
+  --nav-text: #333;
+  --nav-hover-bg: #0366d6;
+  --nav-hover-text: #fff;
+}
+
+:root[data-theme="dark"] {
+  --bg: #16181d;
+  --text: #a9afba;
+  --heading: #e6e8ec;
+  --subheading: #cfd3da;
+  --link: #6cb6ff;
+  --link-hover: #a5d2ff;
+  --rule: #2c313a;
+  --nav-bg: #22262e;
+  --nav-text: #d5d9e0;
+  --nav-hover-bg: #2f6fbf;
+  --nav-hover-text: #fff;
+  color-scheme: dark;
+}
+
+body { background-color: var(--bg); color: var(--text); }
+h1, h2, strong { color: var(--heading); }
+h3, h4, h5, h6 { color: var(--subheading); }
+a { color: var(--link); }
+a:hover, a:focus { color: var(--link-hover); }
+hr { background: var(--rule); }
+section { border-color: var(--rule) !important; }
+nav ul li a { background-color: var(--nav-bg); color: var(--nav-text); }
+nav ul li a:hover { background-color: var(--nav-hover-bg); color: var(--nav-hover-text); }
+.hamburger-icon span { background: var(--nav-text); }
+header img { box-shadow: 0 0 0 4px var(--nav-bg); }
